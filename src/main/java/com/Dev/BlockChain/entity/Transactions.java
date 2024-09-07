@@ -7,9 +7,8 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Transaction {
+public class Transactions {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long transactionId;
     private Long senderId;
     private Long receiverId;

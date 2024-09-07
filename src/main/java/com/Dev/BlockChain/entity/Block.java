@@ -10,11 +10,8 @@ import lombok.Data;
 @Data
 public class Block {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long blockId;
     private String hash;
     private String previousHash;
-
-    // Getters and Setters
 }

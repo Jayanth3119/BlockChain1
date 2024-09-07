@@ -10,7 +10,6 @@ import lombok.Data;
 @Data
 public class Miner {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private Double reward;
