@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Hash Generator</title>
+  <style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #e3f2fd, #a2c2e2);
+        color: #333333;
+        text-align: center;
+    }
+
+    h1 {
+        color: #2d545e;
+        margin-bottom: 20px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    input[type="text"] {
+        padding: 10px;
+        border: 2px solid #0066cc;
+        border-radius: 5px;
+        width: 300px;
+    }
+
+    input[type="submit"] {
+        padding: 10px 20px;
+        background-color: #0066cc;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #004a99;
+    }
+
+    .hash-result {
+        font-size: 1.2rem;
+        padding: 20px;
+        background-color: #f0f4f7;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+<h1>SHA-256 Hash Generator</h1>
+<form th:action="@{/generateHash}" method="post">
+  <input type="text" id="inputText" name="input" placeholder="Enter text to hash" required>
+  <input type="submit" value="Generate Hash">
+</form>
+
+<div class="hash-result" th:if="${hash}">
+  <p><strong>Input:</strong> <span th:text="${input}"></span></p>
+  <p><strong>Hash:</strong> <span th:text="${hash}"></span></p>
+</div>
+</body>
+</html>

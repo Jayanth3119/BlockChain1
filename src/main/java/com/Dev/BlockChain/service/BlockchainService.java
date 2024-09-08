@@ -79,6 +79,8 @@ public class BlockchainService {
             throw e;
         }
     }
+
+
     public String generateHash(String data) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
