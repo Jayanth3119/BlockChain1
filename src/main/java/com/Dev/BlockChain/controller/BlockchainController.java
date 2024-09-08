@@ -3,6 +3,7 @@ package com.Dev.BlockChain.controller;
 import com.Dev.BlockChain.entity.Transactions;
 import com.Dev.BlockChain.service.BlockchainService;
 import java.util.List;
+import java.util.Optional;
 // import org.hibernate.mapping.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,9 +42,14 @@ public String getTransactions(Model model) {
 
     @GetMapping("/transactionStatus/{transactionId}")
     public String getTransactionStatus(@PathVariable Long transactionId, Model model) {
-        Transactions transactions = blockchainService.getTransactionById(transactionId);
-        model.addAttribute("transactions", transactions);
+        Optional<Transactions> transaction = Optional.ofNullable(blockchainService.getTransactionById(transactionId));
+        if (transaction.isPresent()) {
+            model.addAttribute("status", transaction.get().getStatus());
+        } else {
+            model.addAttribute("status", "Transaction not found with ID: " + transactionId);
+        }
         return "transactionStatusView";
     }
+
 
 }
