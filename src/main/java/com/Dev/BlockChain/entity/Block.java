@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 public class Block {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)  // This generates the ID automatically
     private Long id;
     private Long blockId;
     private String hash;

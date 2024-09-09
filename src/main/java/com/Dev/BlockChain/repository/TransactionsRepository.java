@@ -14,4 +14,5 @@ public interface TransactionsRepository extends JpaRepository<Transactions, Long
     Transactions save(Transactions transaction);
     List<Transactions> findBySenderId(Long senderId);
     List<Transactions> findByReceiverId(Long receiverId);
+
 }

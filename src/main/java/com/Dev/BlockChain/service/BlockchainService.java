@@ -33,17 +33,20 @@ public class BlockchainService {
     @Autowired
     private MinerRepository minerRepository;
 
+    // Define and initialize the logger
+    private static final Logger logger = LoggerFactory.getLogger(BlockchainService.class);
+
     public List<Block> getAllBlocks() {
         return blockRepository.findAll();
     }
 
     public List<Transactions> getAllTransactions() {
         List<Transactions> transactions = transactionRepository.findAll();
-        System.out.println("Transactions: " + transactions); // Add this line to verify the list
+        logger.info("Transactions: " + transactions); // Use logger instead of System.out.println
         if (transactions.isEmpty()) {
-            System.out.println("No transactions found in the database");
+            logger.info("No transactions found in the database");
         } else {
-            System.out.println("Found " + transactions.size() + " transactions in the database");
+            logger.info("Found " + transactions.size() + " transactions in the database");
         }
         return transactions;
     }
@@ -57,29 +60,41 @@ public class BlockchainService {
         try {
             Block lastBlock = blockRepository.findTopByOrderByIdDesc();
             Block newBlock = new Block();
-            newBlock.setPreviousHash(lastBlock != null ? lastBlock.getHash() : "0");
-            newBlock.setHash(generateHash(transactions.toString()));
+            String previousHash = lastBlock != null ? lastBlock.getHash() : "0";
+            logger.info("Previous block hash: " + previousHash);
+
+            newBlock.setPreviousHash(previousHash);
+            String newHash = generateHash(transactions.toString());
+            newBlock.setHash(newHash);
             blockRepository.save(newBlock);
+            logger.info("New block hash: " + newHash);
+
             User sender = userRepository.findById(transactions.getSenderId()).orElse(null);
             User receiver = userRepository.findById(transactions.getReceiverId()).orElse(null);
             if (sender != null && receiver != null) {
+                logger.info("Sender balance before: " + sender.getBalance());
+                logger.info("Receiver balance before: " + receiver.getBalance());
+
                 sender.setBalance(sender.getBalance() - transactions.getAmount());
                 receiver.setBalance(receiver.getBalance() + transactions.getAmount());
+
                 userRepository.save(sender);
                 userRepository.save(receiver);
+
+                logger.info("Sender balance after: " + sender.getBalance());
+                logger.info("Receiver balance after: " + receiver.getBalance());
             }
+
             minerRepository.findById(1L).ifPresent(miner -> {
                 miner.setReward(miner.getReward() + 50);
                 minerRepository.save(miner);
             });
 
         } catch (Exception e) {
-            Logger logger = LoggerFactory.getLogger(getClass());
             logger.error("Error occurred during mining: {}", e.getMessage(), e);
             throw e;
         }
     }
-
 
     public String generateHash(String data) {
         try {

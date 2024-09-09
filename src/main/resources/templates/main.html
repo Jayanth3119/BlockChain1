@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Main Page</title>
   <style>
-    /* Google font for a clean, professional look */
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
     body {
@@ -16,21 +15,23 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        background: linear-gradient(135deg, #e3f2fd, #a2c2e2); /* Light gradient background */
-        color: #333333;
+        background: linear-gradient(135deg, #000000, #2c3e50), url('https://example.com/blockchain-background.jpg'); /* Dark gradient + blockchain image */
+        background-size: cover;
+        background-attachment: fixed;
+        color: #ecf0f1;
         text-align: center;
     }
 
     h1 {
         font-size: 3rem;
-        color: #2d545e; /* Night Blue */
+        color: #ecf0f1;
         margin-bottom: 20px;
     }
 
     .nav-container {
         display: flex;
         flex-direction: column;
-        gap: 15px; /* Space between links */
+        gap: 15px;
     }
 
     .nav-link {
@@ -38,15 +39,15 @@
         padding: 15px 25px;
         font-size: 1.2rem;
         color: #ffffff;
-        background-color: #0066cc; /* Cool blue background for links */
+        background-color: #3498db;
         border-radius: 10px;
         text-decoration: none;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         transition: background-color 0.3s ease;
     }
 
     .nav-link:hover {
-        background-color: #004a99; /* Darker blue on hover */
+        background-color: #2980b9;
     }
   </style>
 </head>
@@ -55,7 +56,8 @@
 <div class="nav-container">
   <a href="/blocks" class="nav-link">View Blocks</a>
   <a href="/transactions" class="nav-link">View Transactions</a>
-  <a href="/mine" class="nav-link">Mining Status</a>
+  <a href="/miningStatus" class="nav-link">Mining Status</a>
+  <a href="/blockchainTransaction" class="nav-link">Blockchain Transaction</a>
   <a href="/generateHashPage" class="nav-link">Generate Hash</a>
 </div>
 </body>

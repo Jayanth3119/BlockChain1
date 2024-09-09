@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Transactions</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
@@ -15,18 +16,40 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        background: linear-gradient(135deg, #74ebd5, #acb6e5);
+        background: linear-gradient(135deg, #b2dfdb, #80cbc4);
         color: #333;
         overflow: hidden;
     }
 
-    h1 {
-        text-align: center;
-        color: #fff;
+    .header {
+        position: relative;
+        width: 90%;
+        max-width: 1200px;
         padding: 20px 0;
+        margin: 0;
+    }
+
+    .header h1 {
+        color: #003d34;
         font-size: 2.5rem;
         letter-spacing: 1px;
         margin: 0;
+        text-align: center;
+        width: 100%;
+    }
+
+    .home-icon {
+        font-size: 1.5rem;
+        color: #003d34;
+        text-decoration: none;
+        transition: color 0.3s ease;
+        position: absolute;
+        top: 30px;
+        left: 30px;
+    }
+
+    .home-icon:hover {
+        color: #00796b;
     }
 
     .table-container {
@@ -57,8 +80,8 @@
     }
 
     th {
-        background-color: #0066cc;
-        color: #fff;
+        background-color: #00796b;
+        color: #ffffff;
         font-weight: bold;
         text-transform: uppercase;
         position: sticky;
@@ -67,12 +90,11 @@
     }
 
     td {
-        border-bottom: 1px solid #e0e0e0;
+        border-bottom: 1px solid #e0f2f1;
     }
 
-
     .status-mined {
-        background-color: #d4edda;
+        background-color: #b9fbc0;
     }
 
     .status-failed {
@@ -80,30 +102,32 @@
     }
 
     .status-pending {
-        background-color: #d1ecf1;
+        background-color: #b3e5fc;
     }
 
     tr:nth-child(even) {
-        background-color: #f7f7f7;
+        background-color: #e0f2f1;
     }
 
     tr:hover {
-        background-color: #f1f1f1;
+        background-color: #b2dfdb;
     }
+
     tr {
         transition: background-color 0.3s ease;
     }
+
     .table-container::-webkit-scrollbar {
         width: 6px;
     }
 
     .table-container::-webkit-scrollbar-thumb {
-        background-color: #999;
+        background-color: #80cbc4;
         border-radius: 10px;
     }
 
     .table-container::-webkit-scrollbar-track {
-        background-color: #f0f0f0;
+        background-color: #e0f2f1;
     }
 
     @media (max-width: 768px) {
@@ -116,15 +140,21 @@
             padding: 8px 10px;
         }
 
-        h1 {
+        .header h1 {
             font-size: 2rem;
+        }
+
+        .home-icon {
+            font-size: 1.2rem;
         }
     }
   </style>
 </head>
 <body>
-
-<h1>Transactions</h1>
+<a href="/" class="home-icon"><i class="fas fa-home"></i></a>
+<div class="header">
+  <h1>Transactions</h1>
+</div>
 
 <div class="table-container">
   <table>
@@ -140,8 +170,8 @@
     <tbody>
     <tr th:each="transaction : ${transactions}"
         th:classappend="${transaction.status == 'MINED' ? 'status-mined' :
-                            (transaction.status == 'FAILED' ? 'status-failed' :
-                            (transaction.status == 'PENDING' ? 'status-pending' : ''))}">
+                                (transaction.status == 'FAILED' ? 'status-failed' :
+                                (transaction.status == 'PENDING' ? 'status-pending' : ''))}">
       <td th:text="${transaction.transactionId}">Transaction ID</td>
       <td th:text="${transaction.senderId}">Sender ID</td>
       <td th:text="${transaction.receiverId}">Receiver ID</td>

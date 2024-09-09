@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Hash Generator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome CDN -->
   <style>
     body {
         font-family: 'Roboto', sans-serif;
@@ -16,6 +17,19 @@
         background: linear-gradient(135deg, #e3f2fd, #a2c2e2);
         color: #333333;
         text-align: center;
+    }
+
+    .home-icon {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        font-size: 24px;
+        color: #2d545e;
+        text-decoration: none;
+    }
+
+    .home-icon:hover {
+        color: #004a99;
     }
 
     h1 {
@@ -60,6 +74,7 @@
   </style>
 </head>
 <body>
+<a href="/" class="home-icon"><i class="fas fa-home"></i></a> <!-- Home Icon Link -->
 <h1>SHA-256 Hash Generator</h1>
 <form th:action="@{/generateHash}" method="post">
   <input type="text" id="inputText" name="input" placeholder="Enter text to hash" required>

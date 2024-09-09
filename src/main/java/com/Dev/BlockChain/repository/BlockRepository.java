@@ -12,4 +12,5 @@ public interface BlockRepository extends JpaRepository<Block, Long> {
     List<Block> findAll();
     Block save(Block block);
     Block findByHash(String hash);
+
 }
