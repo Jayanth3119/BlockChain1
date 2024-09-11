@@ -58,6 +58,17 @@ public class BlockchainService {
 
     public void mineBlock(Transactions transactions) {
         try {
+            User sender = userRepository.findById(transactions.getSenderId())
+                    .orElseThrow(() -> new RuntimeException("Sender not found with ID: " + transactions.getSenderId()));
+            User receiver = userRepository.findById(transactions.getReceiverId())
+                    .orElseThrow(() -> new RuntimeException("Receiver not found with ID: " + transactions.getReceiverId()));
+
+            // Check if sender has enough balance
+            if (sender.getBalance() < transactions.getAmount()) {
+                logger.error("Transaction failed: Sender balance is insufficient.");
+                throw new RuntimeException("Insufficient balance for transaction");
+            }
+
             Block lastBlock = blockRepository.findTopByOrderByIdDesc();
             Block newBlock = new Block();
             String previousHash = lastBlock != null ? lastBlock.getHash() : "0";
@@ -69,21 +80,12 @@ public class BlockchainService {
             blockRepository.save(newBlock);
             logger.info("New block hash: " + newHash);
 
-            User sender = userRepository.findById(transactions.getSenderId()).orElse(null);
-            User receiver = userRepository.findById(transactions.getReceiverId()).orElse(null);
-            if (sender != null && receiver != null) {
-                logger.info("Sender balance before: " + sender.getBalance());
-                logger.info("Receiver balance before: " + receiver.getBalance());
+            // Update balances
+            sender.setBalance(sender.getBalance() - transactions.getAmount());
+            receiver.setBalance(receiver.getBalance() + transactions.getAmount());
 
-                sender.setBalance(sender.getBalance() - transactions.getAmount());
-                receiver.setBalance(receiver.getBalance() + transactions.getAmount());
-
-                userRepository.save(sender);
-                userRepository.save(receiver);
-
-                logger.info("Sender balance after: " + sender.getBalance());
-                logger.info("Receiver balance after: " + receiver.getBalance());
-            }
+            userRepository.save(sender);
+            userRepository.save(receiver);
 
             minerRepository.findById(1L).ifPresent(miner -> {
                 miner.setReward(miner.getReward() + 50);
@@ -95,6 +97,7 @@ public class BlockchainService {
             throw e;
         }
     }
+
 
     public String generateHash(String data) {
         try {

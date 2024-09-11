@@ -17,7 +17,6 @@
         position: relative;
     }
 
-
     .container {
         background-color: #ffffff;
         border-radius: 12px;
@@ -28,7 +27,6 @@
         box-sizing: border-box;
     }
 
-
     h1 {
         color: #3b8f91;
         text-align: center;
@@ -36,14 +34,12 @@
         margin-bottom: 25px;
     }
 
-
     label {
         font-weight: bold;
         color: #2d545e;
         margin-bottom: 8px;
         display: block;
     }
-
 
     input[type="text"], input[type="number"] {
         width: 100%;
@@ -54,7 +50,6 @@
         box-sizing: border-box;
         background-color: #f1f9f9;
     }
-
 
     button {
         width: 100%;
@@ -72,7 +67,6 @@
         background-color: #3ba563;
     }
 
-
     p {
         font-size: 16px;
         font-weight: bold;
@@ -82,8 +76,7 @@
         overflow-wrap: break-word;
     }
 
-
-    #previousHash, #newHash {
+    #previousHash, #newHash, #error {
         background-color: #e0f7fa;
         padding: 10px;
         border-radius: 6px;
@@ -118,17 +111,29 @@
             amount: amount
         };
 
-        const response = await fetch('/mineBlock', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(transaction)
-        });
+        try {
+            const response = await fetch('/mineBlock', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(transaction)
+            });
 
-        const result = await response.json();
-        document.getElementById('previousHash').innerText = "Previous Hash: " + result.previousHash;
-        document.getElementById('newHash').innerText = "New Hash: " + result.newHash;
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText);
+            }
+
+            const result = await response.json();
+            document.getElementById('previousHash').innerText = "Previous Hash: " + result.previousHash;
+            document.getElementById('newHash').innerText = "New Hash: " + result.newHash;
+            document.getElementById('error').innerText = '';
+        } catch (error) {
+            document.getElementById('error').innerText = 'Transaction failed: ' + error.message;
+            document.getElementById('previousHash').innerText = '';
+            document.getElementById('newHash').innerText = '';
+        }
     }
   </script>
 </head>
@@ -151,6 +156,7 @@
 
   <p id="previousHash">Previous Hash: </p>
   <p id="newHash">New Hash: </p>
+  <p id="error" style="color: #ff4d4d;"></p>
 </div>
 </body>
 </html>

@@ -13,5 +13,4 @@ public class Miner {
     private Long id;
     private String name;
     private Double reward;
-
 }

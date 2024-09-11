@@ -74,37 +74,13 @@ public class BlockchainController {
     @PostMapping("/mineBlock")
     public ResponseEntity<?> mineBlock(@RequestBody Transactions transactions) {
         try {
+            // Call the service method
+            blockchainService.mineBlock(transactions);
+
+            // Return a success response
             Block lastBlock = blockRepository.findTopByOrderByIdDesc();
-            Block newBlock = new Block();
             String previousHash = lastBlock != null ? lastBlock.getHash() : "0";
-            logger.info("Previous block hash: " + previousHash);
-
-            newBlock.setPreviousHash(previousHash);
             String newHash = blockchainService.generateHash(transactions.toString());
-            newBlock.setHash(newHash);
-            blockRepository.save(newBlock);
-            logger.info("New block hash: " + newHash);
-
-            User sender = userRepository.findById(transactions.getSenderId()).orElse(null);
-            User receiver = userRepository.findById(transactions.getReceiverId()).orElse(null);
-            if (sender != null && receiver != null) {
-                logger.info("Sender balance before: " + sender.getBalance());
-                logger.info("Receiver balance before: " + receiver.getBalance());
-
-                sender.setBalance(sender.getBalance() - transactions.getAmount());
-                receiver.setBalance(receiver.getBalance() + transactions.getAmount());
-
-                userRepository.save(sender);
-                userRepository.save(receiver);
-
-                logger.info("Sender balance after: " + sender.getBalance());
-                logger.info("Receiver balance after: " + receiver.getBalance());
-            }
-
-            minerRepository.findById(1L).ifPresent(miner -> {
-                miner.setReward(miner.getReward() + 50);
-                minerRepository.save(miner);
-            });
 
             Map<String, String> response = new HashMap<>();
             response.put("previousHash", previousHash);
@@ -113,9 +89,10 @@ public class BlockchainController {
 
         } catch (Exception e) {
             logger.error("Error occurred during mining: {}", e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Mining failed");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Mining failed: " + e.getMessage());
         }
     }
+
 
     @GetMapping("/transactions")
     public String getTransactions(Model model) {
